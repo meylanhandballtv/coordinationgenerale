@@ -1,0 +1,351 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.app{font-family:var(--font-sans);padding:1.25rem;max-width:900px;margin:0 auto}
+.header{display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.logo{width:46px;height:46px;border-radius:50%;background:#1D9E75;display:flex;align-items:center;justify-content:center;font-weight:500;font-size:12px;color:#fff;flex-shrink:0;text-align:center;line-height:1.2}
+.header h1{font-size:20px;font-weight:500;color:var(--color-text-primary)}
+.header p{font-size:13px;color:var(--color-text-secondary)}
+.tabs{display:flex;gap:4px;margin-bottom:1.5rem}
+.tab{padding:6px 16px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);font-size:13px;cursor:pointer;background:transparent;color:var(--color-text-secondary);font-family:var(--font-sans)}
+.tab.active{background:var(--color-background-info);color:var(--color-text-info);border-color:var(--color-border-info)}
+.sec{display:none}.sec.active{display:block}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:1rem}
+.card-title{font-size:15px;font-weight:500;margin-bottom:1rem;color:var(--color-text-primary)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg.full{grid-column:1/-1}
+.fg label{font-size:12px;color:var(--color-text-secondary)}
+input[type=text],input[type=datetime-local],input[type=number],input[type=url],select{width:100%;padding:7px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:14px;background:var(--color-background-primary);color:var(--color-text-primary);font-family:var(--font-sans)}
+.score-row{display:flex;align-items:center;gap:8px}
+.score-row input{width:64px;text-align:center}
+.score-sep{font-size:18px;font-weight:500;color:var(--color-text-secondary)}
+.roles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.role-card{border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);overflow:hidden}
+.role-head{display:flex;align-items:center;gap:8px;padding:9px 12px}
+.role-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0}
+.role-label{font-size:13px;font-weight:500}
+.role-body{padding:8px 12px 10px;background:var(--color-background-primary)}
+.mrow{display:flex;gap:6px;align-items:center;margin-bottom:6px}
+.mrow input{flex:1;padding:5px 8px;font-size:13px}
+.btn-x{width:24px;height:24px;border:0.5px solid var(--color-border-tertiary);border-radius:6px;background:transparent;cursor:pointer;font-size:14px;line-height:1;color:var(--color-text-secondary);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.btn-x:hover{background:var(--color-background-secondary)}
+.btn-add{font-size:12px;color:var(--color-text-info);background:none;border:none;cursor:pointer;padding:2px 0;font-family:var(--font-sans)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:.5rem}
+.btn{padding:8px 18px;border-radius:var(--border-radius-md);font-size:14px;cursor:pointer;font-family:var(--font-sans)}
+.btn-primary{background:var(--color-background-success);color:var(--color-text-success);border:0.5px solid var(--color-border-success)}
+.btn-secondary{background:transparent;color:var(--color-text-secondary);border:0.5px solid var(--color-border-tertiary)}
+.btn-danger{background:var(--color-background-danger);color:var(--color-text-danger);border:0.5px solid var(--color-border-danger)}
+.prev-wrap{margin-top:1rem}
+.prev-header{margin-bottom:.75rem}
+.prev-title{font-size:17px;font-weight:500;color:var(--color-text-primary)}
+.prev-sub{font-size:13px;color:var(--color-text-secondary);margin-top:3px}
+.prev-roles{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px;margin-top:.75rem}
+.prev-role{padding:8px 10px;border-radius:var(--border-radius-md);border-left:3px solid}
+.prev-role-name{font-size:11px;font-weight:500;margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}
+.prev-role-members{font-size:13px;color:var(--color-text-primary)}
+.hist-list{display:flex;flex-direction:column;gap:8px}
+.hist-item{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:11px 14px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.hist-item:hover{border-color:var(--color-border-secondary)}
+.hist-date{font-size:12px;color:var(--color-text-secondary);min-width:75px}
+.hist-info{flex:1}
+.hist-match{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.hist-comp{font-size:12px;color:var(--color-text-secondary)}
+.hist-badge{font-size:11px;padding:3px 8px;border-radius:var(--border-radius-md);background:var(--color-background-success);color:var(--color-text-success);flex-shrink:0}
+.empty{padding:2rem;text-align:center;color:var(--color-text-secondary);font-size:14px}
+.toast{position:fixed;bottom:20px;right:20px;padding:10px 18px;border-radius:var(--border-radius-md);font-size:14px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;color:#fff}
+.toast.show{opacity:1}
+.detail-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;align-items:center;justify-content:center}
+.detail-overlay.open{display:flex}
+.detail-box{background:var(--color-background-primary);border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary);padding:1.5rem;max-width:560px;width:90%;max-height:80vh;overflow-y:auto}
+.detail-close{float:right;background:none;border:none;font-size:20px;cursor:pointer;color:var(--color-text-secondary)}
+</style>
+
+<h2 class="sr-only">Feuille de match MeylanHandballTV — gestion des postes de retransmission</h2>
+
+<div class="app">
+  <div class="header">
+    <div class="logo">MHTV</div>
+    <div>
+      <h1>MeylanHandballTV</h1>
+      <p>Feuille de match — postes de retransmission</p>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('saisie')">Nouvelle feuille</button>
+    <button class="tab" onclick="showTab('historique')">Historique</button>
+  </div>
+
+  <div id="saisie" class="sec active">
+    <div class="card">
+      <div class="card-title">Informations du match</div>
+      <div class="grid2">
+        <div class="fg">
+          <label>Date & heure</label>
+          <input type="datetime-local" id="date">
+        </div>
+        <div class="fg">
+          <label>Compétition / championnat</label>
+          <input type="text" id="competition" placeholder="Ex: N2 Masculin, Coupe de France…">
+        </div>
+        <div class="fg">
+          <label>Équipe domicile</label>
+          <input type="text" id="domicile" placeholder="Ex: Meylan HB">
+        </div>
+        <div class="fg">
+          <label>Équipe extérieure</label>
+          <input type="text" id="exterieur" placeholder="Ex: Grenoble HB">
+        </div>
+        <div class="fg full">
+          <label>Score final</label>
+          <div class="score-row">
+            <input type="number" id="score_dom" placeholder="0" min="0" style="width:64px;text-align:center">
+            <span class="score-sep">—</span>
+            <input type="number" id="score_ext" placeholder="0" min="0" style="width:64px;text-align:center">
+            <span style="font-size:13px;color:var(--color-text-secondary);margin-left:4px">dom. / ext.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Équipe de retransmission</div>
+      <div class="roles-grid" id="roles-container"></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" onclick="sauvegarder()">Sauvegarder</button>
+      <button class="btn btn-secondary" onclick="toggleApercu()">Aperçu</button>
+      <button class="btn btn-secondary" onclick="reinitialiser()">Réinitialiser</button>
+    </div>
+
+    <div id="prev-zone" style="display:none" class="card prev-wrap">
+      <div id="prev-content"></div>
+    </div>
+  </div>
+
+  <div id="historique" class="sec">
+    <div class="card">
+      <div class="card-title">Matchs enregistrés</div>
+      <div id="hist-list"></div>
+    </div>
+  </div>
+</div>
+
+<div class="detail-overlay" id="detail-overlay" onclick="closeDetail(event)">
+  <div class="detail-box" id="detail-box">
+    <button class="detail-close" onclick="document.getElementById('detail-overlay').classList.remove('open')">×</button>
+    <div id="detail-content"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const ROLES = [
+  {id:'resp',    label:'Responsable de retransmission', short:'RR',  color:'#0F6E56', bg:'#E1F5EE', count:1},
+  {id:'real',    label:'Réalisateur',                   short:'RÉA', color:'#185FA5', bg:'#E6F1FB', count:1},
+  {id:'comment', label:'Commentateur',                  short:'COM', color:'#534AB7', bg:'#EEEDFE', count:2},
+  {id:'cadre1',  label:'Cadreur 1',                     short:'C1',  color:'#993C1D', bg:'#FAECE7', count:1},
+  {id:'cadre2',  label:'Cadreur 2',                     short:'C2',  color:'#BA7517', bg:'#FAEEDA', count:1},
+  {id:'cadre3',  label:'Cadreur 3',                     short:'C3',  color:'#3B6D11', bg:'#EAF3DE', count:1},
+  {id:'score',   label:'Officiel Technique Score',       short:'OTS', color:'#A32D2D', bg:'#FCEBEB', count:1},
+  {id:'stats',   label:'Statistiques',                  short:'STAT',color:'#7F77DD', bg:'#EEEDFE', count:1},
+];
+
+function buildRoleCard(r){
+  const div=document.createElement('div');
+  div.className='role-card';
+  div.id='rc-'+r.id;
+  div.style.background=r.bg;
+  let membersHtml='';
+  for(let i=0;i<r.count;i++){
+    membersHtml+=`<div class="mrow"><input type="text" placeholder="Nom du membre" data-role="${r.id}"></div>`;
+  }
+  div.innerHTML=`
+    <div class="role-head" style="background:${r.bg}">
+      <div class="role-icon" style="background:${r.color};color:#fff">${r.short}</div>
+      <div class="role-label" style="color:${r.color}">${r.label}</div>
+    </div>
+    <div class="role-body">
+      <div id="members-${r.id}">${membersHtml}</div>
+      <button class="btn-add" onclick="addMember('${r.id}')">+ Ajouter</button>
+    </div>`;
+  return div;
+}
+
+function initRoles(){
+  const c=document.getElementById('roles-container');
+  c.innerHTML='';
+  ROLES.forEach(r=>c.appendChild(buildRoleCard(r)));
+}
+
+function addMember(id){
+  const cont=document.getElementById('members-'+id);
+  const row=document.createElement('div');
+  row.className='mrow';
+  row.innerHTML=`<input type="text" placeholder="Nom du membre" data-role="${id}"><button class="btn-x" onclick="this.parentElement.remove()">×</button>`;
+  cont.appendChild(row);
+}
+
+function getFormData(){
+  const roles={};
+  ROLES.forEach(r=>{
+    const inputs=document.querySelectorAll(`#members-${r.id} input`);
+    roles[r.id]=Array.from(inputs).map(i=>i.value.trim()).filter(Boolean);
+  });
+  return{
+    date:document.getElementById('date').value,
+    competition:document.getElementById('competition').value.trim(),
+    domicile:document.getElementById('domicile').value.trim(),
+    exterieur:document.getElementById('exterieur').value.trim(),
+    score_dom:document.getElementById('score_dom').value,
+    score_ext:document.getElementById('score_ext').value,
+    roles, id:Date.now()
+  };
+}
+
+function fillFromData(m){
+  document.getElementById('date').value=m.date||'';
+  document.getElementById('competition').value=m.competition||'';
+  document.getElementById('domicile').value=m.domicile||'';
+  document.getElementById('exterieur').value=m.exterieur||'';
+  document.getElementById('score_dom').value=m.score_dom||'';
+  document.getElementById('score_ext').value=m.score_ext||'';
+  initRoles();
+  if(m.roles){
+    ROLES.forEach(r=>{
+      const members=m.roles[r.id]||[];
+      if(!members.length)return;
+      const cont=document.getElementById('members-'+r.id);
+      const inputs=cont.querySelectorAll('input');
+      members.forEach((name,idx)=>{
+        if(idx<inputs.length){inputs[idx].value=name;}
+        else{addMember(r.id);cont.querySelectorAll('input')[idx].value=name;}
+      });
+    });
+  }
+}
+
+function buildPreviewHTML(data,compact){
+  const dateStr=data.date?new Date(data.date).toLocaleString('fr-FR',{weekday:'long',day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}):'';
+  const score=(data.score_dom!==''&&data.score_ext!==''&&data.score_dom!==undefined)?`${data.score_dom} — ${data.score_ext}`:'';
+  let html=`<div class="prev-header">
+    <div class="prev-title">${data.domicile||'Domicile'} vs ${data.exterieur||'Extérieur'}${score?' &nbsp;·&nbsp; '+score:''}</div>
+    <div class="prev-sub">${dateStr}${data.competition?' &nbsp;·&nbsp; '+data.competition:''}</div>
+  </div>
+  <div class="prev-roles">`;
+  ROLES.forEach(r=>{
+    const members=(data.roles&&data.roles[r.id])||[];
+    html+=`<div class="prev-role" style="border-color:${r.color};background:${r.bg}">
+      <div class="prev-role-name" style="color:${r.color}">${r.label}</div>
+      <div class="prev-role-members">${members.length?members.join(', '):'<span style="color:var(--color-text-secondary)">—</span>'}</div>
+    </div>`;
+  });
+  html+='</div>';
+  return html;
+}
+
+function toggleApercu(){
+  const zone=document.getElementById('prev-zone');
+  if(zone.style.display==='block'){zone.style.display='none';return;}
+  const data=getFormData();
+  document.getElementById('prev-content').innerHTML=buildPreviewHTML(data);
+  zone.style.display='block';
+}
+
+function sauvegarder(){
+  const data=getFormData();
+  if(!data.domicile&&!data.exterieur){toast('Remplis au moins le nom des équipes !','#E24B4A');return;}
+  const hist=JSON.parse(localStorage.getItem('mhtv_v2')||'[]');
+  hist.unshift(data);
+  localStorage.setItem('mhtv_v2',JSON.stringify(hist));
+  toast('Feuille sauvegardée !','#1D9E75');
+  renderHist();
+}
+
+function reinitialiser(){
+  document.getElementById('date').value='';
+  document.getElementById('competition').value='';
+  document.getElementById('domicile').value='';
+  document.getElementById('exterieur').value='';
+  document.getElementById('score_dom').value='';
+  document.getElementById('score_ext').value='';
+  initRoles();
+  document.getElementById('prev-zone').style.display='none';
+  toast('Formulaire réinitialisé','#888780');
+}
+
+function renderHist(){
+  const hist=JSON.parse(localStorage.getItem('mhtv_v2')||'[]');
+  const el=document.getElementById('hist-list');
+  if(!hist.length){el.innerHTML='<div class="empty">Aucune feuille enregistrée</div>';return;}
+  el.innerHTML='';
+  hist.forEach((m,i)=>{
+    const dateStr=m.date?new Date(m.date).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'}):'—';
+    const score=(m.score_dom!==''&&m.score_ext!==''&&m.score_dom!==undefined)?` ${m.score_dom}—${m.score_ext}`:'';
+    const total=Object.values(m.roles||{}).flat().length;
+    const div=document.createElement('div');
+    div.className='hist-item';
+    div.innerHTML=`<div class="hist-date">${dateStr}</div>
+      <div class="hist-info">
+        <div class="hist-match">${m.domicile||'?'} vs ${m.exterieur||'?'}${score}</div>
+        <div class="hist-comp">${m.competition||''}</div>
+      </div>
+      <div class="hist-badge">${total} membre${total>1?'s':''}</div>
+      <button class="btn-x" style="margin-left:4px" onclick="event.stopPropagation();deleteMatch(${i})" title="Supprimer">×</button>`;
+    div.onclick=()=>openDetail(i);
+    el.appendChild(div);
+  });
+}
+
+function openDetail(i){
+  const hist=JSON.parse(localStorage.getItem('mhtv_v2')||'[]');
+  const m=hist[i];
+  const dc=document.getElementById('detail-content');
+  dc.innerHTML=buildPreviewHTML(m)+`<div style="margin-top:1rem;display:flex;gap:8px">
+    <button class="btn btn-secondary" onclick="loadMatch(${i})">Charger & modifier</button>
+    <button class="btn btn-danger" onclick="deleteMatch(${i});document.getElementById('detail-overlay').classList.remove('open')">Supprimer</button>
+  </div>`;
+  document.getElementById('detail-overlay').classList.add('open');
+}
+
+function closeDetail(e){
+  if(e.target===document.getElementById('detail-overlay'))
+    document.getElementById('detail-overlay').classList.remove('open');
+}
+
+function loadMatch(i){
+  const hist=JSON.parse(localStorage.getItem('mhtv_v2')||'[]');
+  fillFromData(hist[i]);
+  document.getElementById('detail-overlay').classList.remove('open');
+  showTab('saisie');
+  toast('Feuille chargée','#185FA5');
+}
+
+function deleteMatch(i){
+  const hist=JSON.parse(localStorage.getItem('mhtv_v2')||'[]');
+  hist.splice(i,1);
+  localStorage.setItem('mhtv_v2',JSON.stringify(hist));
+  renderHist();
+  toast('Feuille supprimée','#E24B4A');
+}
+
+function showTab(tab){
+  document.querySelectorAll('.tab').forEach((t,idx)=>t.classList.toggle('active',(tab==='saisie'&&idx===0)||(tab==='historique'&&idx===1)));
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.getElementById(tab).classList.add('active');
+  if(tab==='historique')renderHist();
+}
+
+function toast(msg,color='#1D9E75'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.style.background=color;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+initRoles();
+const now=new Date(),pad=n=>String(n).padStart(2,'0');
+document.getElementById('date').value=`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+</script>
